@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>白袍專業團隊 WhiteCoatPlan</title>
+    <title>白袍專業團隊</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 React 和 ReactDOM -->
@@ -63,6 +63,7 @@
 
         const WhiteCoatTeam = () => {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [referrer, setReferrer] = useState('');
 
             // 導航連結
             const navLinks = [
@@ -135,7 +136,7 @@
                             <div className="flex justify-between items-center h-20">
                                 <div className="flex items-center space-x-2">
                                     <Icons.Sprout className="w-8 h-8 text-teal-600" />
-                                    <span className="text-2xl font-bold text-slate-800 tracking-tight">WhiteCoat<span className="text-teal-600">Plan</span></span>
+                                    <span className="text-2xl font-bold text-slate-800 tracking-tight">白袍<span className="text-teal-600">專業團隊</span></span>
                                 </div>
                                 
                                 {/* Desktop Menu */}
@@ -370,10 +371,27 @@
                                     
                                     <h3 className="text-2xl font-bold text-slate-800 mb-2">加入官方 LINE 預約</h3>
                                     <p className="text-slate-500 mb-6">ID: @943bokln</p>
+
+                                    {/* New Input Field */}
+                                    <div className="w-full max-w-xs mb-4 text-left">
+                                        <label htmlFor="referrer" className="block text-sm font-medium text-slate-600 mb-1">
+                                            請問是誰介紹您來的？ <span className="text-slate-400 font-normal">(選填)</span>
+                                        </label>
+                                        <input
+                                            id="referrer"
+                                            type="text"
+                                            value={referrer}
+                                            onChange={(e) => setReferrer(e.target.value)}
+                                            placeholder="輸入介紹人姓名"
+                                            className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-[#00B900] focus:ring-1 focus:ring-[#00B900] outline-none transition-colors text-slate-700 bg-slate-50"
+                                        />
+                                    </div>
                                     
                                     <div className="bg-stone-100 rounded-xl p-4 w-full mb-8 border border-stone-200">
                                         <p className="text-sm text-slate-500 mb-2">請在對話框輸入通關密語：</p>
-                                        <p className="text-xl font-bold text-teal-700 select-all">【我要預約】</p>
+                                        <p className="text-xl font-bold text-teal-700 select-all break-all">
+                                            {referrer.trim() ? `【我要預約】介紹人：${referrer}` : '【我要預約】'}
+                                        </p>
                                     </div>
 
                                     <a 
@@ -400,7 +418,7 @@
                         <div className="max-w-7xl mx-auto px-4 text-center">
                             <div className="flex items-center justify-center space-x-2 mb-4">
                                 <Icons.Sprout className="w-6 h-6 text-teal-500" />
-                                <span className="text-xl font-bold text-white tracking-tight">WhiteCoat<span className="text-teal-500">Plan</span></span>
+                                <span className="text-xl font-bold text-white tracking-tight">白袍<span className="text-teal-500">專業團隊</span></span>
                             </div>
                             <div className="flex items-center justify-center space-x-2 mb-6 text-sm text-stone-500">
                                 <Icons.Mail className="w-4 h-4" />
@@ -410,7 +428,7 @@
                                 本網站內容僅供健康衛教參考，若有身體不適或疾病問題，請務必尋求專業醫師診斷。
                             </p>
                             <div className="text-xs text-stone-600">
-                                &copy; {new Date().getFullYear()} White Coat Plan. All rights reserved.
+                                &copy; {new Date().getFullYear()} 白袍專業團隊. All rights reserved.
                             </div>
                         </div>
                     </footer>
