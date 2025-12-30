@@ -59,11 +59,14 @@
             Heart: (props) => <Icon {...props} path={<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5 4.5 1.5l-2.5 1-2.5-1A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>} />,
             ShieldCheck: (props) => <Icon {...props} path={<><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></>} />,
             Mail: (props) => <Icon {...props} path={<><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></>} />,
+            Copy: (props) => <Icon {...props} path={<><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></>} />,
+            Check: (props) => <Icon {...props} path={<polyline points="20 6 9 17 4 12"/>} />,
         };
 
         const WhiteCoatTeam = () => {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
             const [referrer, setReferrer] = useState('');
+            const [isCopied, setIsCopied] = useState(false);
 
             // 導航連結
             const navLinks = [
@@ -126,6 +129,26 @@
                     element.scrollIntoView({ behavior: 'smooth' });
                     setIsMenuOpen(false);
                 }
+            };
+
+            const handleCopy = () => {
+                const textToCopy = referrer.trim() ? `【我要預約】介紹人：${referrer}` : '【我要預約】';
+                
+                // 建立臨時的 textarea 元素來執行複製
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    setIsCopied(true);
+                    setTimeout(() => setIsCopied(false), 2000); // 2秒後重置狀態
+                } catch (err) {
+                    console.error('複製失敗', err);
+                }
+                
+                document.body.removeChild(textArea);
             };
 
             return (
@@ -387,10 +410,31 @@
                                         />
                                     </div>
                                     
-                                    <div className="bg-stone-100 rounded-xl p-4 w-full mb-8 border border-stone-200">
-                                        <p className="text-sm text-slate-500 mb-2">請在對話框輸入通關密語：</p>
-                                        <p className="text-xl font-bold text-teal-700 select-all break-all">
-                                            {referrer.trim() ? `【我要預約】介紹人：${referrer}` : '【我要預約】'}
+                                    {/* Click-to-Copy Area */}
+                                    <div 
+                                        onClick={handleCopy}
+                                        className="bg-stone-100 rounded-xl p-4 w-full mb-8 border border-stone-200 cursor-pointer hover:bg-stone-200 hover:border-teal-300 transition-all group relative"
+                                    >
+                                        <p className="text-sm text-slate-500 mb-2 flex items-center justify-center">
+                                            點擊複製通關密語
+                                            <Icons.Copy className="w-4 h-4 ml-1.5 opacity-50 group-hover:opacity-100" />
+                                        </p>
+                                        
+                                        <div className="flex items-center justify-center">
+                                            <p className="text-xl font-bold text-teal-700 break-all select-all mr-2">
+                                                {referrer.trim() ? `【我要預約】介紹人：${referrer}` : '【我要預約】'}
+                                            </p>
+                                        </div>
+
+                                        {/* Status Message */}
+                                        {isCopied && (
+                                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/75 text-white text-sm px-3 py-1 rounded-full flex items-center shadow-lg whitespace-nowrap z-20">
+                                                <Icons.Check className="w-4 h-4 mr-1 text-green-400" /> 已複製成功！
+                                            </div>
+                                        )}
+                                        
+                                        <p className="text-xs text-slate-400 mt-2 group-hover:text-teal-600 transition-colors">
+                                            (點擊此區塊即可複製文字)
                                         </p>
                                     </div>
 
