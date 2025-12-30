@@ -1,380 +1,425 @@
-import React, { useState } from 'react';
-import { 
-  Stethoscope, 
-  Users, 
-  MessageCircle, 
-  Menu, 
-  X, 
-  ChevronRight, 
-  Activity, 
-  Heart, 
-  ShieldCheck, 
-  Mail,
-  CalendarCheck,
-  CheckCircle2,
-  Sprout,
-  ArrowRight,
-  Smartphone
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白袍專業團隊 WhiteCoatPlan</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 React 和 ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 引入 Babel 用來解析 JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* 自定義動畫 */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-const WhiteCoatTeam = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+    <script type="text/babel">
+        const { useState } = React;
 
-  // 導航連結
-  const navLinks = [
-    { name: '白袍計畫', href: '#project' },
-    { name: '團隊組成', href: '#team' },
-    { name: '諮詢服務', href: '#services' },
-    { name: '預約諮詢', href: '#contact' },
-  ];
+        // --- 圖示元件 (取代 lucide-react import) ---
+        const Icon = ({ path, className, fill = "none" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {path}
+            </svg>
+        );
 
-  // 團隊數據
-  const teamRoles = [
-    {
-      role: '營養師團隊',
-      desc: '不只計算卡路里，更懂你的生活難處。',
-      detail: '專精於代謝控制與備餐規劃，協助您在忙碌生活中找到最省力的飲食對策，讓健康飲食不再是壓力。',
-      img: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      role: '職能治療師',
-      desc: '拆解生活卡關點，重新設計你的日常。',
-      detail: '從作息安排到壓力釋放，透過職能科學分析，將健康習慣無痛植入您的生活慣性中，解決「知道做不到」的困境。',
-      img: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      role: '護理師',
-      desc: '最溫暖的個案管理，隨時在線的健康管家。',
-      detail: '負責追蹤您的執行進度，統整醫療資訊。當您對身體狀況感到困惑時，我們是您與專業知識之間最可靠的橋樑。',
-      img: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&q=80&w=400'
-    }
-  ];
+        const Icons = {
+            Sprout: (props) => <Icon {...props} path={<><path d="M7 20h10" /><path d="M10 20c5.5-2.5.8-6.4 3-10" /><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.2.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" /><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1.7-1.3 2.9-1.3 3 1.2.1 1.2-.6 2.5-1.6 3.5-1.7 1.5-3 1.9-5.2 1.9-3.4 0-5.2-1.9-5.2-1.9" /></>} />,
+            Menu: (props) => <Icon {...props} path={<><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></>} />,
+            X: (props) => <Icon {...props} path={<><path d="M18 6 6 18"/><path d="6 6 18 18"/></>} />,
+            ChevronRight: (props) => <Icon {...props} path={<path d="m9 18 6-6-6-6"/>} />,
+            Smartphone: (props) => <Icon {...props} path={<><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></>} />,
+            CheckCircle2: (props) => <Icon {...props} path={<><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></>} />,
+            MessageCircle: (props) => <Icon {...props} path={<path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>} />,
+            Activity: (props) => <Icon {...props} path={<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>} />,
+            Heart: (props) => <Icon {...props} path={<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5 4.5 1.5l-2.5 1-2.5-1A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>} />,
+            ShieldCheck: (props) => <Icon {...props} path={<><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></>} />,
+            Mail: (props) => <Icon {...props} path={<><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></>} />,
+        };
 
-  // 服務數據 - 更詳細的說明
-  const services = [
-    {
-      icon: <MessageCircle className="w-8 h-8 text-teal-600" />,
-      title: '線上深度諮詢',
-      desc: '打破傳統診間的「三分鐘」限制。透過視訊，我們有充足的時間傾聽您的困擾。醫師與專家走出白色巨塔，在您最自在的環境中，提供最詳盡的醫療建議與對話。'
-    },
-    {
-      icon: <Activity className="w-8 h-8 text-teal-600" />,
-      title: '數據轉譯與解讀',
-      desc: '紅字不只是數字，更是身體的求救訊號。我們不只告訴您「異常」，更教您如何透過生活調整來「修正」。將艱澀難懂的醫學報告，翻譯成您聽得懂的具體行動指南。'
-    },
-    {
-      icon: <Heart className="w-8 h-8 text-teal-600" />,
-      title: '生活型態處方',
-      desc: '真正的健康不在藥罐子裡，而在餐盤與枕頭間。針對飲食偏差、睡眠障礙與壓力源，開立非藥物的「生活處方」，從生活的根本去改善亞健康狀態。'
-    },
-    {
-      icon: <ShieldCheck className="w-8 h-8 text-teal-600" />,
-      title: '持續性健康教練',
-      desc: '醫療院所的照護往往在領藥後中止，但我們的服務才正要開始。像是您的專屬健康教練，定期追蹤執行成效，隨時動態調整計畫，確保改變真的發生且能持續。'
-    }
-  ];
+        const WhiteCoatTeam = () => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const scrollToSection = (e, href) => {
-    e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
-  };
+            // 導航連結
+            const navLinks = [
+                { name: '白袍計畫', href: '#project' },
+                { name: '團隊組成', href: '#team' },
+                { name: '諮詢服務', href: '#services' },
+                { name: '預約諮詢', href: '#contact' },
+            ];
 
-  return (
-    <div className="min-h-screen bg-stone-50 font-sans text-slate-700">
-      {/* Navigation */}
-      <nav className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 border-b border-teal-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-2">
-              <Sprout className="w-8 h-8 text-teal-600" />
-              <span className="text-2xl font-bold text-slate-800 tracking-tight">WhiteCoat<span className="text-teal-600">Plan</span></span>
-            </div>
-            
-            {/* Desktop Menu */}
-            <div className="hidden md:flex space-x-8">
-              {navLinks.map((link) => (
-                <a 
-                  key={link.name} 
-                  href={link.href}
-                  onClick={(e) => scrollToSection(e, link.href)}
-                  className="text-slate-600 hover:text-teal-600 font-medium transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
+            // 團隊數據
+            const teamRoles = [
+                {
+                    role: '營養師團隊',
+                    desc: '不只計算卡路里，更懂你的生活難處。',
+                    detail: '專精於代謝控制與備餐規劃，協助您在忙碌生活中找到最省力的飲食對策，讓健康飲食不再是壓力。',
+                    img: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400'
+                },
+                {
+                    role: '職能治療師',
+                    desc: '拆解生活卡關點，重新設計你的日常。',
+                    detail: '從作息安排到壓力釋放，透過職能科學分析，將健康習慣無痛植入您的生活慣性中，解決「知道做不到」的困境。',
+                    img: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=400'
+                },
+                {
+                    role: '護理師',
+                    desc: '最溫暖的個案管理，隨時在線的健康管家。',
+                    detail: '負責追蹤您的執行進度，統整醫療資訊。當您對身體狀況感到困惑時，我們是您與專業知識之間最可靠的橋樑。',
+                    img: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&q=80&w=400'
+                }
+            ];
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button 
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-slate-600 hover:text-teal-600 focus:outline-none"
-              >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-          </div>
-        </div>
+            // 服務數據
+            const services = [
+                {
+                    icon: <Icons.MessageCircle className="w-8 h-8 text-teal-600" />,
+                    title: '線上深度諮詢',
+                    desc: '打破傳統診間的「三分鐘」限制。透過視訊，我們有充足的時間傾聽您的困擾。醫師與專家走出白色巨塔，在您最自在的環境中，提供最詳盡的醫療建議與對話。'
+                },
+                {
+                    icon: <Icons.Activity className="w-8 h-8 text-teal-600" />,
+                    title: '數據轉譯與解讀',
+                    desc: '紅字不只是數字，更是身體的求救訊號。我們不只告訴您「異常」，更教您如何透過生活調整來「修正」。將艱澀難懂的醫學報告，翻譯成您聽得懂的具體行動指南。'
+                },
+                {
+                    icon: <Icons.Heart className="w-8 h-8 text-teal-600" />,
+                    title: '生活型態處方',
+                    desc: '真正的健康不在藥罐子裡，而在餐盤與枕頭間。針對飲食偏差、睡眠障礙與壓力源，開立非藥物的「生活處方」，從生活的根本去改善亞健康狀態。'
+                },
+                {
+                    icon: <Icons.ShieldCheck className="w-8 h-8 text-teal-600" />,
+                    title: '持續性健康教練',
+                    desc: '醫療院所的照護往往在領藥後中止，但我們的服務才正要開始。像是您的專屬健康教練，定期追蹤執行成效，隨時動態調整計畫，確保改變真的發生且能持續。'
+                }
+            ];
 
-        {/* Mobile Menu Dropdown */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-slate-100 absolute w-full">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => scrollToSection(e, link.href)}
-                  className="block px-3 py-4 text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-teal-50 text-center border-b border-teal-50"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
+            const scrollToSection = (e, href) => {
+                e.preventDefault();
+                const element = document.querySelector(href);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    setIsMenuOpen(false);
+                }
+            };
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-16 md:pt-32 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-stone-50 -z-10" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 mb-10 md:mb-0">
-            <div className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold text-teal-700 bg-teal-100/50 rounded-full border border-teal-100">
-              白袍計畫 White Coat Project
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-slate-800">
-              醫療走出巨塔<br/>
-              <span className="text-teal-600">從生活根本改善健康</span>
-            </h1>
-            <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
-              我們讓專業醫療人員在醫療院所外，依然能為您提供最專業的健康支持。
-              不追求完美，只追求「你做得到，而且能持續」的生活改變。
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button onClick={(e) => scrollToSection(e, '#contact')} className="px-8 py-4 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-lg shadow-teal-200 flex items-center justify-center">
-                <Smartphone className="w-5 h-5 mr-2" /> 立即預約諮詢
-              </button>
-              <button onClick={(e) => scrollToSection(e, '#services')} className="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-lg font-semibold hover:bg-stone-50 transition-colors flex items-center justify-center">
-                查看服務內容
-              </button>
-            </div>
-          </div>
-          <div className="md:w-1/2 flex justify-center relative">
-            <div className="relative w-full max-w-md aspect-square">
-               {/* Abstract Blobs - Lake Green Theme */}
-               <div className="absolute top-0 right-0 w-64 h-64 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-               <div className="absolute top-0 -left-4 w-64 h-64 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-               <div className="absolute -bottom-8 left-20 w-64 h-64 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-               
-               {/* Illustration Placeholder */}
-               <div className="relative h-full w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white/50">
-                  <img 
-                    src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&q=80&w=800" 
-                    alt="Healthy Lifestyle" 
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = 'https://images.unsplash.com/photo-1576091160550-217358c7b819?auto=format&fit=crop&q=80&w=800'
-                    }}
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur p-4 m-4 rounded-xl">
-                    <p className="font-bold text-teal-800 flex items-center">
-                      <CheckCircle2 className="w-5 h-5 mr-2 text-teal-600" />
-                      你的健康，我們陪你落地
-                    </p>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            return (
+                <div className="min-h-screen bg-stone-50 font-sans text-slate-700">
+                    {/* Navigation */}
+                    <nav className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50 border-b border-teal-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between items-center h-20">
+                                <div className="flex items-center space-x-2">
+                                    <Icons.Sprout className="w-8 h-8 text-teal-600" />
+                                    <span className="text-2xl font-bold text-slate-800 tracking-tight">WhiteCoat<span className="text-teal-600">Plan</span></span>
+                                </div>
+                                
+                                {/* Desktop Menu */}
+                                <div className="hidden md:flex space-x-8">
+                                    {navLinks.map((link) => (
+                                        <a 
+                                            key={link.name} 
+                                            href={link.href}
+                                            onClick={(e) => scrollToSection(e, link.href)}
+                                            className="text-slate-600 hover:text-teal-600 font-medium transition-colors"
+                                        >
+                                            {link.name}
+                                        </a>
+                                    ))}
+                                </div>
 
-      {/* 1. 白袍計畫介紹 */}
-      <section id="project" className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">什麼是白袍計畫？</h2>
-            
-            <div className="bg-teal-50 p-8 rounded-3xl mb-12 relative overflow-hidden">
-               <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
-               <h3 className="text-xl md:text-2xl font-bold text-teal-800 mb-6 leading-relaxed">
-                 我們相信，問題不是你不努力<br/>
-                 而是醫療資源往往止步於醫院大門
-               </h3>
-               <p className="text-slate-600 text-lg mb-6 leading-relaxed">
-                 白袍計畫的核心，是讓醫療人員在醫療院所外，依然可以提供專業服務。<br className="hidden md:block"/>
-                 我們協助您將生硬的醫療建議，轉化為<span className="inline-block border-b-4 border-teal-300 font-bold text-slate-800 mx-1">適合您生活</span>的具體行動。
-               </p>
-               <div className="flex flex-col md:flex-row justify-center gap-4 text-sm font-semibold text-slate-500">
-                  <span className="flex items-center justify-center"><CheckCircle2 className="w-4 h-4 mr-1 text-teal-500"/> 不追求完美</span>
-                  <span className="flex items-center justify-center"><CheckCircle2 className="w-4 h-4 mr-1 text-teal-500"/> 只追求「你做得到，而且能持續」</span>
-               </div>
-            </div>
+                                {/* Mobile Menu Button */}
+                                <div className="md:hidden">
+                                    <button 
+                                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                        className="text-slate-600 hover:text-teal-600 focus:outline-none"
+                                    >
+                                        {isMenuOpen ? <Icons.X className="w-6 h-6" /> : <Icons.Menu className="w-6 h-6" />}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-            <div className="grid md:grid-cols-3 gap-8 text-left">
-              <div className="group">
-                <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">1</div>
-                <h4 className="text-xl font-bold text-slate-800 mb-2">釐清現況</h4>
-                <p className="text-slate-600 leading-relaxed">
-                  不只是看健檢紅字，更要看身體感受、生活作息、壓力源與那些讓你總是卡關的點。
-                </p>
-              </div>
-              <div className="group">
-                <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">2</div>
-                <h4 className="text-xl font-bold text-slate-800 mb-2">整合專業</h4>
-                <p className="text-slate-600 leading-relaxed">
-                  營養師、職能治療師與護理師跨界合作。不再是頭痛醫頭，而是為您擬定全方位策略。
-                </p>
-              </div>
-              <div className="group">
-                 <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">3</div>
-                <h4 className="text-xl font-bold text-slate-800 mb-2">陪你落地</h4>
-                <p className="text-slate-600 leading-relaxed">
-                  最難的不是知道，而是做到。我們在生活中持續陪伴與優化，直到健康變成本能。
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                        {/* Mobile Menu Dropdown */}
+                        {isMenuOpen && (
+                            <div className="md:hidden bg-white border-t border-slate-100 absolute w-full">
+                                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                                    {navLinks.map((link) => (
+                                        <a
+                                            key={link.name}
+                                            href={link.href}
+                                            onClick={(e) => scrollToSection(e, link.href)}
+                                            className="block px-3 py-4 text-base font-medium text-slate-600 hover:text-teal-600 hover:bg-teal-50 text-center border-b border-teal-50"
+                                        >
+                                            {link.name}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </nav>
 
-      {/* 2. 白袍團隊組成 */}
-      <section id="team" className="py-20 bg-stone-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍團隊組成</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              我們不只是一群穿著白袍的人，更是您健康路上的陪跑員。
-            </p>
-          </div>
+                    {/* Hero Section */}
+                    <section className="relative pt-20 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-stone-50 -z-10" />
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+                            <div className="md:w-1/2 mb-10 md:mb-0">
+                                <div className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold text-teal-700 bg-teal-100/50 rounded-full border border-teal-100">
+                                    白袍計畫 White Coat Project
+                                </div>
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-slate-800">
+                                    醫療走出巨塔<br/>
+                                    <span className="text-teal-600">從生活根本改善健康</span>
+                                </h1>
+                                <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
+                                    我們讓專業醫療人員在醫療院所外，依然能為您提供最專業的健康支持。
+                                    不追求完美，只追求「你做得到，而且能持續」的生活改變。
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <button onClick={(e) => scrollToSection(e, '#contact')} className="px-8 py-4 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-lg shadow-teal-200 flex items-center justify-center">
+                                        <Icons.Smartphone className="w-5 h-5 mr-2" /> 立即預約諮詢
+                                    </button>
+                                    <button onClick={(e) => scrollToSection(e, '#services')} className="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-lg font-semibold hover:bg-stone-50 transition-colors flex items-center justify-center">
+                                        查看服務內容
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="md:w-1/2 flex justify-center relative">
+                                <div className="relative w-full max-w-md aspect-square">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+                                    <div className="absolute top-0 -left-4 w-64 h-64 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+                                    <div className="absolute -bottom-8 left-20 w-64 h-64 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+                                    
+                                    <div className="relative h-full w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white/50">
+                                        <img 
+                                            src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&q=80&w=800" 
+                                            alt="Healthy Lifestyle" 
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                e.target.onerror = null; 
+                                                e.target.src = 'https://images.unsplash.com/photo-1576091160550-217358c7b819?auto=format&fit=crop&q=80&w=800'
+                                            }}
+                                        />
+                                        <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur p-4 m-4 rounded-xl">
+                                            <p className="font-bold text-teal-800 flex items-center">
+                                                <Icons.CheckCircle2 className="w-5 h-5 mr-2 text-teal-600" />
+                                                你的健康，我們陪你落地
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {teamRoles.map((member, index) => (
-              <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
-                <div className="h-64 overflow-hidden relative">
-                   <div className="absolute inset-0 bg-teal-900/10 group-hover:bg-teal-900/0 transition-colors z-10"></div>
-                  <img 
-                    src={member.img} 
-                    alt={member.role} 
-                    className="h-full w-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=400';
-                    }}
-                  />
+                    {/* 1. 白袍計畫介紹 */}
+                    <section id="project" className="py-24 bg-white">
+                        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center mb-16">
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">什麼是白袍計畫？</h2>
+                                
+                                <div className="bg-teal-50 p-8 rounded-3xl mb-12 relative overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-full h-2 bg-teal-500"></div>
+                                    <h3 className="text-xl md:text-2xl font-bold text-teal-800 mb-6 leading-relaxed">
+                                        我們相信，問題不是你不努力<br/>
+                                        而是醫療資源往往止步於醫院大門
+                                    </h3>
+                                    <p className="text-slate-600 text-lg mb-6 leading-relaxed">
+                                        白袍計畫的核心，是讓醫療人員在醫療院所外，依然可以提供專業服務。<br className="hidden md:block"/>
+                                        我們協助您將生硬的醫療建議，轉化為<span className="inline-block border-b-4 border-teal-300 font-bold text-slate-800 mx-1">適合您生活</span>的具體行動。
+                                    </p>
+                                    <div className="flex flex-col md:flex-row justify-center gap-4 text-sm font-semibold text-slate-500">
+                                        <span className="flex items-center justify-center"><Icons.CheckCircle2 className="w-4 h-4 mr-1 text-teal-500"/> 不追求完美</span>
+                                        <span className="flex items-center justify-center"><Icons.CheckCircle2 className="w-4 h-4 mr-1 text-teal-500"/> 只追求「你做得到，而且能持續」</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid md:grid-cols-3 gap-8 text-left">
+                                    <div className="group">
+                                        <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">1</div>
+                                        <h4 className="text-xl font-bold text-slate-800 mb-2">釐清現況</h4>
+                                        <p className="text-slate-600 leading-relaxed">
+                                            不只是看健檢紅字，更要看身體感受、生活作息、壓力源與那些讓你總是卡關的點。
+                                        </p>
+                                    </div>
+                                    <div className="group">
+                                        <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">2</div>
+                                        <h4 className="text-xl font-bold text-slate-800 mb-2">整合專業</h4>
+                                        <p className="text-slate-600 leading-relaxed">
+                                            營養師、職能治療師與護理師跨界合作。不再是頭痛醫頭，而是為您擬定全方位策略。
+                                        </p>
+                                    </div>
+                                    <div className="group">
+                                        <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">3</div>
+                                        <h4 className="text-xl font-bold text-slate-800 mb-2">陪你落地</h4>
+                                        <p className="text-slate-600 leading-relaxed">
+                                            最難的不是知道，而是做到。我們在生活中持續陪伴與優化，直到健康變成本能。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 2. 白袍團隊組成 */}
+                    <section id="team" className="py-20 bg-stone-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center mb-16">
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍團隊組成</h2>
+                                <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                                    我們不只是一群穿著白袍的人，更是您健康路上的陪跑員。
+                                </p>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-8">
+                                {teamRoles.map((member, index) => (
+                                    <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                                        <div className="h-64 overflow-hidden relative">
+                                            <div className="absolute inset-0 bg-teal-900/10 group-hover:bg-teal-900/0 transition-colors z-10"></div>
+                                            <img 
+                                                src={member.img} 
+                                                alt={member.role} 
+                                                className="h-full w-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=400';
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="p-8 flex-1 flex flex-col">
+                                            <h3 className="text-xl font-bold text-teal-800 mb-2">{member.role}</h3>
+                                            <p className="font-medium text-slate-800 mb-4 text-lg">{member.desc}</p>
+                                            <hr className="border-stone-100 my-4" />
+                                            <p className="text-slate-600 leading-relaxed flex-1">{member.detail}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 3. 白袍諮詢服務 */}
+                    <section id="services" className="py-20 bg-white">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center mb-16">
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍諮詢服務</h2>
+                                <div className="w-20 h-1.5 bg-teal-600 mx-auto rounded-full mb-6"></div>
+                                <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+                                    我們提供的不僅是一次對話，而是一個完整的健康支持系統。
+                                    針對您的需求，提供從單次解惑到長期陪伴的彈性選擇。
+                                </p>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {services.map((service, index) => (
+                                    <div key={index} className="flex flex-col sm:flex-row items-start p-8 rounded-2xl border border-stone-100 hover:border-teal-200 hover:bg-teal-50/30 transition-all duration-300 shadow-sm hover:shadow-md">
+                                        <div className="flex-shrink-0 bg-white p-4 rounded-xl shadow-sm border border-stone-100 mb-4 sm:mb-0 sm:mr-6 text-teal-600">
+                                            {service.icon}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-slate-800 mb-3">{service.title}</h3>
+                                            <p className="text-slate-600 leading-relaxed text-base">{service.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* CTA / Contact Section (LINE) */}
+                    <section id="contact" className="py-24 bg-teal-900 text-white relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-800/50 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-800/30 rounded-full blur-3xl -ml-20 -mb-20"></div>
+
+                        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                            
+                            <h2 className="text-3xl md:text-4xl font-bold mb-6">準備好開始改變了嗎？</h2>
+                            <p className="text-teal-100 text-lg mb-10 leading-relaxed max-w-2xl mx-auto">
+                                改變不需要很大，只需要開始。現在就加入我們的官方 LINE，開啟您與專業團隊的對話。
+                            </p>
+
+                            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl inline-block w-full max-w-lg mx-auto transform hover:scale-105 transition-transform duration-300">
+                                <div className="flex flex-col items-center">
+                                    <div className="w-20 h-20 bg-[#00B900] rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                                        <Icons.MessageCircle className="w-12 h-12 text-white" fill="white" />
+                                    </div>
+                                    
+                                    <h3 className="text-2xl font-bold text-slate-800 mb-2">加入官方 LINE 預約</h3>
+                                    <p className="text-slate-500 mb-6">ID: @943bokln</p>
+                                    
+                                    <div className="bg-stone-100 rounded-xl p-4 w-full mb-8 border border-stone-200">
+                                        <p className="text-sm text-slate-500 mb-2">請在對話框輸入通關密語：</p>
+                                        <p className="text-xl font-bold text-teal-700 select-all">【我要預約】</p>
+                                    </div>
+
+                                    <a 
+                                        href="https://lin.ee/chojrUO"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full py-4 bg-[#00B900] hover:bg-[#009900] text-white font-bold rounded-xl transition-colors shadow-lg flex justify-center items-center text-lg"
+                                    >
+                                        加入好友並預約 <Icons.ChevronRight className="w-6 h-6 ml-1" />
+                                    </a>
+                                    
+                                    <p className="text-xs text-slate-400 mt-6">
+                                        服務時間：週一至週五 09:00-18:00<br/>
+                                        我們將在服務時間內盡快回覆您的訊息
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer className="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
+                        <div className="max-w-7xl mx-auto px-4 text-center">
+                            <div className="flex items-center justify-center space-x-2 mb-4">
+                                <Icons.Sprout className="w-6 h-6 text-teal-500" />
+                                <span className="text-xl font-bold text-white tracking-tight">WhiteCoat<span className="text-teal-500">Plan</span></span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-2 mb-6 text-sm text-stone-500">
+                                <Icons.Mail className="w-4 h-4" />
+                                <span>whitecoathealthcoach@gmail.com</span>
+                            </div>
+                            <p className="text-sm mb-6 max-w-lg mx-auto">
+                                本網站內容僅供健康衛教參考，若有身體不適或疾病問題，請務必尋求專業醫師診斷。
+                            </p>
+                            <div className="text-xs text-stone-600">
+                                &copy; {new Date().getFullYear()} White Coat Plan. All rights reserved.
+                            </div>
+                        </div>
+                    </footer>
                 </div>
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-teal-800 mb-2">{member.role}</h3>
-                  <p className="font-medium text-slate-800 mb-4 text-lg">{member.desc}</p>
-                  <hr className="border-stone-100 my-4" />
-                  <p className="text-slate-600 leading-relaxed flex-1">{member.detail}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            );
+        };
 
-      {/* 3. 白袍諮詢服務 (詳細說明版) */}
-      <section id="services" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍諮詢服務</h2>
-              <div className="w-20 h-1.5 bg-teal-600 mx-auto rounded-full mb-6"></div>
-              <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-                我們提供的不僅是一次對話，而是一個完整的健康支持系統。
-                針對您的需求，提供從單次解惑到長期陪伴的彈性選擇。
-              </p>
-           </div>
-
-           <div className="grid md:grid-cols-2 gap-8">
-             {services.map((service, index) => (
-               <div key={index} className="flex flex-col sm:flex-row items-start p-8 rounded-2xl border border-stone-100 hover:border-teal-200 hover:bg-teal-50/30 transition-all duration-300 shadow-sm hover:shadow-md">
-                 <div className="flex-shrink-0 bg-white p-4 rounded-xl shadow-sm border border-stone-100 mb-4 sm:mb-0 sm:mr-6 text-teal-600">
-                   {service.icon}
-                 </div>
-                 <div>
-                   <h3 className="text-xl font-bold text-slate-800 mb-3">{service.title}</h3>
-                   <p className="text-slate-600 leading-relaxed text-base">{service.desc}</p>
-                 </div>
-               </div>
-             ))}
-           </div>
-        </div>
-      </section>
-
-      {/* CTA / Contact Section (LINE) */}
-      <section id="contact" className="py-24 bg-teal-900 text-white relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-800/50 rounded-full blur-3xl -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-800/30 rounded-full blur-3xl -ml-20 -mb-20"></div>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">準備好開始改變了嗎？</h2>
-          <p className="text-teal-100 text-lg mb-10 leading-relaxed max-w-2xl mx-auto">
-            改變不需要很大，只需要開始。現在就加入我們的官方 LINE，開啟您與專業團隊的對話。
-          </p>
-
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl inline-block w-full max-w-lg mx-auto transform hover:scale-105 transition-transform duration-300">
-            <div className="flex flex-col items-center">
-               <div className="w-20 h-20 bg-[#00B900] rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <MessageCircle className="w-12 h-12 text-white" fill="white" />
-               </div>
-               
-               <h3 className="text-2xl font-bold text-slate-800 mb-2">加入官方 LINE 預約</h3>
-               <p className="text-slate-500 mb-6">ID: @943bokln</p>
-               
-               <div className="bg-stone-100 rounded-xl p-4 w-full mb-8 border border-stone-200">
-                 <p className="text-sm text-slate-500 mb-2">請在對話框輸入通關密語：</p>
-                 <p className="text-xl font-bold text-teal-700 select-all">【我要預約】</p>
-               </div>
-
-               <a 
-                 href="https://lin.ee/chojrUO"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="w-full py-4 bg-[#00B900] hover:bg-[#009900] text-white font-bold rounded-xl transition-colors shadow-lg flex justify-center items-center text-lg"
-               >
-                 加入好友並預約 <ChevronRight className="w-6 h-6 ml-1" />
-               </a>
-               
-               <p className="text-xs text-slate-400 mt-6">
-                 服務時間：週一至週五 09:00-18:00<br/>
-                 我們將在服務時間內盡快回覆您的訊息
-               </p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Sprout className="w-6 h-6 text-teal-500" />
-            <span className="text-xl font-bold text-white tracking-tight">WhiteCoat<span className="text-teal-500">Plan</span></span>
-          </div>
-          <div className="flex items-center justify-center space-x-2 mb-6 text-sm text-stone-500">
-             <Mail className="w-4 h-4" />
-             <span>whitecoathealthcoach@gmail.com</span>
-          </div>
-          <p className="text-sm mb-6 max-w-lg mx-auto">
-            本網站內容僅供健康衛教參考，若有身體不適或疾病問題，請務必尋求專業醫師診斷。
-          </p>
-          <div className="text-xs text-stone-600">
-            &copy; {new Date().getFullYear()} White Coat Plan. All rights reserved.
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default WhiteCoatTeam;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WhiteCoatTeam />);
+    </script>
+</body>
+</html>
