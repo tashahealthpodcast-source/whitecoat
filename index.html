@@ -64,27 +64,21 @@
         const WhiteCoatTeam = () => {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-            // 導航連結
+            // 導航連結 (調整順序)
             const navLinks = [
+                { name: '諮詢服務', href: '#services' },
                 { name: '白袍計畫', href: '#project' },
                 { name: '團隊組成', href: '#team' },
-                { name: '諮詢服務', href: '#services' },
                 { name: '預約諮詢', href: '#contact' },
             ];
 
-            // 團隊數據
+            // 團隊數據 
             const teamRoles = [
                 {
                     role: '健康管理師',
                     desc: '您的專屬健康嚮導，陪您找回生活的平衡。',
                     detail: '不再盲目追求單一數據，而是全盤考量您的飲食、活動與作息。我們將生硬的健康指引轉化為日常中容易執行的微小改變，為您量身打造最無壓力的專屬生活提案。',
                     img: 'team.jpg'
-                },
-                {
-                    role: '職能治療師',
-                    desc: '拆解生活卡關點，重新設計你的日常。',
-                    detail: '從作息安排到壓力釋放，透過職能科學分析，將健康習慣無痛植入您的生活慣性中，解決「知道做不到」的困境。',
-                    img: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=400'
                 },
                 {
                     role: '護理師',
@@ -94,27 +88,27 @@
                 }
             ];
 
-            // 服務數據
+            // 服務數據 (更新內容)
             const services = [
                 {
-                    icon: <Icons.MessageCircle className="w-8 h-8 text-teal-600" />,
-                    title: '線上深度諮詢',
-                    desc: '打破傳統診間的「三分鐘」限制。透過視訊，我們有充足的時間傾聽您的困擾。醫師與專家走出白色巨塔，在您最自在的環境中，提供最詳盡的醫療建議與對話。'
-                },
-                {
                     icon: <Icons.Activity className="w-8 h-8 text-teal-600" />,
-                    title: '數據轉譯與解讀',
-                    desc: '紅字不只是數字，更是身體的求救訊號。我們不只告訴您「異常」，更教您如何透過生活調整來「修正」。將艱澀難懂的醫學報告，翻譯成您聽得懂的具體行動指南。'
+                    title: '健檢報告解讀',
+                    desc: '紅字不只是數字，更是身體的求救訊號。我們不只告訴您「異常」，更將艱澀難懂的醫學報告，翻譯成您聽得懂的具體行動指南。'
                 },
                 {
-                    icon: <Icons.Heart className="w-8 h-8 text-teal-600" />,
-                    title: '生活型態處方',
-                    desc: '真正的健康不在藥罐子裡，而在餐盤與枕頭間。針對飲食偏差、睡眠障礙與壓力源，開立非藥物的「生活處方」，從生活的根本去改善亞健康狀態。'
+                    icon: <Icons.MessageCircle className="w-8 h-8 text-teal-600" />,
+                    title: '個人深度諮詢',
+                    desc: '打破傳統診間的「三分鐘」限制。透過視訊，我們有充足的時間傾聽您的困擾，在您最自在的環境中提供詳盡的醫療建議。'
                 },
                 {
                     icon: <Icons.ShieldCheck className="w-8 h-8 text-teal-600" />,
                     title: '持續性健康教練',
-                    desc: '醫療院所的照護往往在領藥後中止，但我們的服務才正要開始。像是您的專屬健康教練，定期追蹤執行成效，隨時動態調整計畫，確保改變真的發生且能持續。'
+                    desc: '醫療院所的照護往往在領藥後中止，但我們的服務才正要開始。我們定期追蹤您的執行成效，動態調整計畫，確保改變能持續。'
+                },
+                {
+                    icon: <Icons.Heart className="w-8 h-8 text-teal-600" />,
+                    title: '生活型態處方',
+                    desc: '真正的健康不在藥罐子裡，而在餐盤與枕頭間。針對飲食偏差、睡眠障礙與壓力源，開立非藥物的「生活處方」，從根本改善亞健康。'
                 }
             ];
 
@@ -236,13 +230,76 @@
                         </div>
                     </section>
 
-                    {/* 1. 白袍計畫介紹 */}
-                    <section id="project" className="py-24 bg-white">
+                    {/* 1. 白袍諮詢服務 (移至上方) */}
+                    <section id="services" className="py-20 bg-white">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center mb-16">
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍諮詢服務</h2>
+                                <div className="w-20 h-1.5 bg-teal-600 mx-auto rounded-full mb-6"></div>
+                                <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+                                    我們提供的不僅是一次對話，而是一個完整的健康支持系統。
+                                    針對您的需求，提供從單次解惑到長期陪伴的彈性選擇。
+                                </p>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {services.map((service, index) => (
+                                    <div key={index} className="flex flex-col sm:flex-row items-start p-8 rounded-2xl border border-stone-100 hover:border-teal-200 hover:bg-teal-50/30 transition-all duration-300 shadow-sm hover:shadow-md">
+                                        <div className="flex-shrink-0 bg-white p-4 rounded-xl shadow-sm border border-stone-100 mb-4 sm:mb-0 sm:mr-6 text-teal-600">
+                                            {service.icon}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-slate-800 mb-3">{service.title}</h3>
+                                            <p className="text-slate-600 leading-relaxed text-base">{service.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* --- 新增：免費諮詢活動區塊 --- */}
+                            <div className="mt-16 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-3xl p-8 md:p-12 border border-teal-100 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10">
+                                    <Icons.Activity className="w-32 h-32 text-teal-800" />
+                                </div>
+                                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
+                                    <div className="md:w-2/3 mb-8 md:mb-0 md:pr-8">
+                                        <div className="inline-block px-4 py-1.5 mb-4 text-sm font-bold text-teal-800 bg-teal-200/50 rounded-full">
+                                            🌟 限時活動
+                                        </div>
+                                        <h3 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
+                                            如何獲得<span className="text-teal-600">免費</span>初步分析？
+                                        </h3>
+                                        <p className="text-slate-600 text-lg mb-6 leading-relaxed">
+                                            想了解身體發出的訊號嗎？只要在我們的官方 LINE 對話中，上傳您的健檢報告圖片，我們將由專業人員為您<strong className="text-teal-700">免費挑選 2-3 個關鍵數據進行初步分析</strong>，給您第一手的健康建議！
+                                        </p>
+                                        <ul className="text-sm text-slate-500 space-y-2 mb-6">
+                                            <li className="flex items-center"><Icons.CheckCircle2 className="w-4 h-4 mr-2 text-teal-500" /> 支援格式：JPG, JPEG, HEIC (手機拍照即可)</li>
+                                            <li className="flex items-center text-teal-700 font-medium"><Icons.ShieldCheck className="w-4 h-4 mr-2 text-teal-600" /> 隱私承諾：您的健檢報告僅作為本次諮詢分析使用，我們嚴格遵守保密規範，絕不做其他用途，請安心上傳。</li>
+                                        </ul>
+                                    </div>
+                                    <div className="md:w-1/3 flex justify-center w-full">
+                                        <a 
+                                            href="https://lin.ee/chojrUO"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full md:w-auto px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 flex justify-center items-center text-lg text-center"
+                                        >
+                                            立即上傳報告 <Icons.ChevronRight className="w-6 h-6 ml-1" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* --- 結束：免費諮詢活動區塊 --- */}
+                        </div>
+                    </section>
+
+                    {/* 2. 白袍計畫介紹 */}
+                    <section id="project" className="py-24 bg-stone-50">
                         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="text-center mb-16">
                                 <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">什麼是白袍計畫？</h2>
                                 
-                                {/* 新增的 team.jpg 照片區塊 */}
+                                {/* team.jpg 照片區塊放置於此 */}
                                 <div className="w-full max-w-3xl mx-auto mb-12 overflow-hidden rounded-3xl shadow-lg border border-slate-100 relative">
                                     <img 
                                         src="team.jpg" 
@@ -273,21 +330,21 @@
 
                                 <div className="grid md:grid-cols-3 gap-8 text-left">
                                     <div className="group">
-                                        <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">1</div>
+                                        <div className="w-12 h-12 bg-white text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors shadow-sm">1</div>
                                         <h4 className="text-xl font-bold text-slate-800 mb-2">釐清現況</h4>
                                         <p className="text-slate-600 leading-relaxed">
                                             不只是看健檢紅字，更要看身體感受、生活作息、壓力源與那些讓你總是卡關的點。
                                         </p>
                                     </div>
                                     <div className="group">
-                                        <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">2</div>
+                                        <div className="w-12 h-12 bg-white text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors shadow-sm">2</div>
                                         <h4 className="text-xl font-bold text-slate-800 mb-2">整合專業</h4>
                                         <p className="text-slate-600 leading-relaxed">
-                                            營養師、職能治療師與護理師跨界合作。不再是頭痛醫頭，而是為您擬定全方位策略。
+                                            跨專業團隊合作。不再是頭痛醫頭，而是為您擬定全方位健康策略。
                                         </p>
                                     </div>
                                     <div className="group">
-                                        <div className="w-12 h-12 bg-stone-100 text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors">3</div>
+                                        <div className="w-12 h-12 bg-white text-slate-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors shadow-sm">3</div>
                                         <h4 className="text-xl font-bold text-slate-800 mb-2">陪你落地</h4>
                                         <p className="text-slate-600 leading-relaxed">
                                             最難的不是知道，而是做到。我們在生活中持續陪伴與優化，直到健康變成本能。
@@ -298,8 +355,8 @@
                         </div>
                     </section>
 
-                    {/* 2. 白袍團隊組成 */}
-                    <section id="team" className="py-20 bg-stone-50">
+                    {/* 3. 白袍團隊組成 */}
+                    <section id="team" className="py-20 bg-white">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="text-center mb-16">
                                 <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍團隊組成</h2>
@@ -308,9 +365,9 @@
                                 </p>
                             </div>
 
-                            <div className="grid md:grid-cols-3 gap-8">
+                            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                                 {teamRoles.map((member, index) => (
-                                    <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
+                                    <div key={index} className="bg-stone-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col border border-stone-100">
                                         <div className="h-64 overflow-hidden relative">
                                             <div className="absolute inset-0 bg-teal-900/10 group-hover:bg-teal-900/0 transition-colors z-10"></div>
                                             <img 
@@ -326,36 +383,8 @@
                                         <div className="p-8 flex-1 flex flex-col">
                                             <h3 className="text-xl font-bold text-teal-800 mb-2">{member.role}</h3>
                                             <p className="font-medium text-slate-800 mb-4 text-lg">{member.desc}</p>
-                                            <hr className="border-stone-100 my-4" />
+                                            <hr className="border-stone-200 my-4" />
                                             <p className="text-slate-600 leading-relaxed flex-1">{member.detail}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* 3. 白袍諮詢服務 */}
-                    <section id="services" className="py-20 bg-white">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="text-center mb-16">
-                                <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">白袍諮詢服務</h2>
-                                <div className="w-20 h-1.5 bg-teal-600 mx-auto rounded-full mb-6"></div>
-                                <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-                                    我們提供的不僅是一次對話，而是一個完整的健康支持系統。
-                                    針對您的需求，提供從單次解惑到長期陪伴的彈性選擇。
-                                </p>
-                            </div>
-
-                            <div className="grid md:grid-cols-2 gap-8">
-                                {services.map((service, index) => (
-                                    <div key={index} className="flex flex-col sm:flex-row items-start p-8 rounded-2xl border border-stone-100 hover:border-teal-200 hover:bg-teal-50/30 transition-all duration-300 shadow-sm hover:shadow-md">
-                                        <div className="flex-shrink-0 bg-white p-4 rounded-xl shadow-sm border border-stone-100 mb-4 sm:mb-0 sm:mr-6 text-teal-600">
-                                            {service.icon}
-                                        </div>
-                                        <div>
-                                            <h3 className="text-xl font-bold text-slate-800 mb-3">{service.title}</h3>
-                                            <p className="text-slate-600 leading-relaxed text-base">{service.desc}</p>
                                         </div>
                                     </div>
                                 ))}
